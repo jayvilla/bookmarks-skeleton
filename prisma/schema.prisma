@@ -25,7 +25,7 @@ model Bookmark {
   title     String
   notes     String?
   createdAt DateTime @default(now())
-  tags      Tag[]    @relation(fields: [tagId], references: [id])
+  tags      Tag[]    
 
   @@index([title])
   @@index([url])
@@ -35,7 +35,7 @@ model Bookmark {
 model Tag {
   id        String   @id @default(cuid())
   name      String   @unique
-  bookmarks Bookmark[] @relation(fields: [bookmarkId], references: [id])
+  bookmarks Bookmark[] 
 
   @@index([name])
   @@map("tags")
