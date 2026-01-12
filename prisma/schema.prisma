@@ -1,0 +1,42 @@
+// This file is a placeholder for Prisma schema.
+// Run `npx prisma init` to set up Prisma if you haven't already.
+
+// BOOKMARKS_TODO_1:
+// Define Bookmark, Tag, and their many-to-many relation for the Bookmarks mini-app.
+// Requirements:
+// - Bookmark: id (string, cuid), url (string), title (string), notes (string?), createdAt.
+// - Tag: id (string, cuid), name (string, unique).
+// - Relation: bookmarks can have many tags, tags can belong to many bookmarks.
+// - Consider a join table or Prisma implicit many-to-many.
+// - Think about indexes for searching by tag and text.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  url       String
+  title     String
+  notes     String?
+  createdAt DateTime @default(now())
+  tags      Tag[]    @relation(fields: [tagId], references: [id])
+
+  @@index([title])
+  @@index([url])
+  @@map("bookmarks")
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  bookmarks Bookmark[] @relation(fields: [bookmarkId], references: [id])
+
+  @@index([name])
+  @@map("tags")
+}
